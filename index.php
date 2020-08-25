@@ -9,5 +9,6 @@
 <body>
     <ul>
         <li><a href="/1-arrays-basics">Arrays Basics</a></li>
+        <li><a href="/2-counting">Counting</a></li>
 </body>
 </html>

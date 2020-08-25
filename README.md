@@ -267,13 +267,97 @@ array (size=2)
 16. the array item with id 2 gets set then get replaced by the array item with id 3 that has same key name.
 17. Important to remember array keys are unique.
 
+### Counting
+1. The ability to count the items within an array is extremely useful
+2. Now we will use a basic array again. When we get value we can also store it to use it later.
+```php
+$people = ['alex', 'billy', 'dale'];
 
+echo count($people); // 3
+```
+3. Now we will use a different way to count
+```php
+$people = ['alex', 'billy', 'dale'];
 
+echo array_count_values($people); //  Notice: Array to string conversion 
+```
+4. When working with arrays this may be another thing you may see.
+5. This error means we trying to echo out a value which is an array
+6. We could do a var_dump but we can only echo out things like integers and strings or floats etc
+7. So lets create variable and var_dump it to see what is going on.
+```php
+$count = array_count_values($people);
 
+var_dump($count);
+```
+8. What array_count_values done is count the amount of items within the array.
+9. How often they occur, in this case all items having only 1 value.
+10. Is not counting all items but is counting items within an array.
+```php
+array (size=3)
+  'alex' => int 1
+  'billy' => int 1
+  'dale' => int 1
+```
+11. Lets test it out by adding a couple of more values.
+12. Bear in mind these are not indexes they are values.
+```php
+$people = ['alex', 'billy', 'dale', 'alex'];
 
+var_dump($people);
 
+array (size=3)
+  'alex' => int 2
+  'billy' => int 1
+  'dale' => int 1
+```
+13. Now we see we get key alex with count of 2.
+14. So if you were to count unique items in array you use array_count_values
+15. Now if you wanted to just count all items in array use count()
+16. Sometimes you will encounter sizeof()
+17. Which is just an alias of count and does the same thing
+```php
+echo count($people); // 4
+echo sizeof($people); // 4
+```
 
+#### Now we will use a more complex array
+1. We will use a multidimensional array
+```php
+$people = [
+    [
+        'id' => 1,
+        'username' => 'alex'
+    ],
+    [
+        'id' => 2,
+        'username' => 'dale'
+    ],
+];
 
+```
+2. var_dump($people);
+```php
+array (size=2)
+  0 => 
+    array (size=2)
+      'id' => int 1
+      'username' => string 'alex' (length=4)
+  1 => 
+    array (size=2)
+      'id' => int 2
+      'username' => string 'dale' (length=4)
+```
+3. Now we have 2 items within this array.
+4. We can prove this by doing an echo on count($people);
+```php
+echo count($people); // 2
+die();
+
+```
+5. All that matters is items imediately within the array that is why we get 2 instead of 4.
+6. What we not doing is using a recursive function to count every single item, is only those in very top level
+7. There are some ways we can do this, which we will explore in a later lesson.
 
 
 
