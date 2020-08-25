@@ -1,0 +1,303 @@
+# Arrays are Everything
+
+### 1. Array Basics
+
+1. Create basic array
+```php
+$names = array('alex', 'billy', 'dale');
+```
+2. Now we use var_dump to dump out the output of a variable
+```php
+var_dump($names);
+```
+```php
+array (size=3)
+  0 => string 'alex' (length=4)
+  1 => string 'billy' (length=5)
+  2 => string 'dale' (length=4)
+```
+3. Now lets define something we might get from our database.
+4. This is a multi dimensional array since we have an array outside.
+```php
+$people = [
+    'alex' => [
+        'id' => 1,
+    ]
+];
+
+```
+5. As you see this is different to what we had before
+```php
+$names = ['alex', 'billy', 'dale'];
+```
+6. As you see we start at 0 and then count outwards. This is what zero index means
+```php
+var_dump($names);
+array (size=3)
+  0 => string 'alex' (length=4)
+  1 => string 'billy' (length=5)
+  2 => string 'dale' (length=4)
+```
+7. In here we defining a string base key
+```php
+$people = [
+    'alex' => [
+        'id' => 1,
+        'email' => 'alex@email.com'
+    ],
+    'billy' => [
+        'id' => 2,
+        'email' => 'billy@email.com'
+    ],
+    
+];
+
+```
+8. Now we use var_dump($people)
+9. Notice now there are no numerical keys
+```php
+array (size=2)
+  'alex' => 
+    array (size=2)
+      'id' => int 1
+      'email' => string 'alex@email.com' (length=14)
+  'billy' => 
+    array (size=2)
+      'id' => int 2
+      'email' => string 'billy@email.com' (length=15)
+```
+10. There is a better way to do this a more real world way.
+11. If this was data comming from the database you would not have keys coming from the database
+```php
+$people = [
+    [
+        'id' => 1,
+        'username' => 'alex',
+        'email' => 'alex@gmail.com',
+    ],
+    [
+        'id' => 2,
+        'username' => 'billy',
+        'email' => 'billy@gmail.com',
+    ],
+];
+```
+12. var_dump($people);
+```php
+array (size=2)
+  0 => 
+    array (size=3)
+      'id' => int 1
+      'username' => string 'alex' (length=4)
+      'email' => string 'alex@gmail.com' (length=14)
+  1 => 
+    array (size=3)
+      'id' => int 2
+      'username' => string 'billy' (length=5)
+      'email' => string 'billy@gmail.com' (length=15)
+```
+13. Now we still have an array with 2 arrays inside
+14. We dealing here with a numerical indexed array
+15. Lets say we want to loop through these arrays
+16. When we can to manipulate it or output it on the page.
+17. For your users to actually see.
+18. var_dump is very realiable to tell you exactly what you working with.
+19. Will make your job a lot easier.
+
+#### Lets see how we access array values
+1. Now we will use a simple example again
+```php
+$names = ['alex', 'billy'];
+
+var_dump($names);
+```
+
+2. Here we have numerical array with values
+
+```php
+array (size=2)
+  0 => string 'alex' (length=4)
+  1 => string 'billy' (length=5)
+```
+3. Now we will output a value using the key
+4. it can work as well if the key is a string echo $names['alex'];
+```php
+$names = ['alex', 'billy'];
+
+echo $names[0]; // alex
+echo $names[1]; // billy
+echo $names[2]; // Undefined offset: 2
+```
+3. Now if index not found you get offset error.
+4. Now what if you want to access multidimensional array value
+```php
+$people = [
+    [
+        'id' => 1,
+        'username' => 'alex',
+        'email' => 'alex@gmail.com',
+    ],
+    [
+        'id' => 2,
+        'username' => 'billy',
+        'email' => 'billy@gmail.com',
+    ],
+];
+```
+5. Now we will access a key value inside one of the arrays
+6. You have to chain to access them
+```php
+echo $people[0]['username']; // alex
+echo $people[1]['username']; // billy
+echo $people[1]['bio']; // Notice: Undefined index: bio
+```
+7. Again if you try to access key that doesn't exist you get Undefined index error
+8. Now we do var_dump(people);
+```php
+array (size=2)
+  0 => 
+    array (size=3)
+      'id' => int 1
+      'username' => string 'alex' (length=4)
+      'email' => string 'alex@gmail.com' (length=14)
+  1 => 
+    array (size=3)
+      'id' => int 2
+      'username' => string 'billy' (length=5)
+      'email' => string 'billy@gmail.com' (length=15)
+```
+9. Notice each item has unique index.
+10. Now you have have string index that you may also find at some point
+```php
+$people = [
+    'alex' => [
+        'id' => 1,
+        'username' => 'alex',
+        'email' => 'alex@gmail.com',
+    ],
+    'billy' => [
+        'id' => 2,
+        'username' => 'billy',
+        'email' => 'billy@gmail.com',
+    ],
+    'billy' => [
+        'id' => 2,
+        'username' => 'billy',
+        'email' => 'billy@gmail.com',
+    ]
+];
+
+```
+11. var_dump($people);
+```php
+array (size=2)
+  'alex' => 
+    array (size=3)
+      'id' => int 1
+      'username' => string 'alex' (length=4)
+      'email' => string 'alex@gmail.com' (length=14)
+  'billy' => 
+    array (size=3)
+      'id' => int 2
+      'username' => string 'billy' (length=5)
+      'email' => string 'billy@gmail.com' (length=15)
+```
+1.   We have the following and 2 keys are the say we will only see 1 item in the var_dump
+```php
+$people = [
+    'alex' => [
+        'id' => 1,
+        'username' => 'alex',
+        'email' => 'alex@gmail.com',
+    ],
+    'billy' => [
+        'id' => 2,
+        'username' => 'billy',
+        'email' => 'billy@gmail.com',
+    ],
+    'billy' => [
+        'id' => 2,
+        'username' => 'billy',
+        'email' => 'billy@gmail.com',
+    ]
+];
+```
+1.  var_dump
+```php
+array (size=2)
+  'alex' => 
+    array (size=3)
+      'id' => int 1
+      'username' => string 'alex' (length=4)
+      'email' => string 'alex@gmail.com' (length=14)
+  'billy' => 
+    array (size=3)
+      'id' => int 2
+      'username' => string 'billy' (length=5)
+      'email' => string 'billy@gmail.com' (length=15)
+```
+14. Now what we can do is change the id of the second one to 3
+```php
+array (size=2)
+  'alex' => 
+    array (size=3)
+      'id' => int 1
+      'username' => string 'alex' (length=4)
+      'email' => string 'alex@gmail.com' (length=14)
+  'billy' => 
+    array (size=3)
+      'id' => int 3
+      'username' => string 'billy' (length=5)
+      'email' => string 'billy@gmail.com' (length=15)
+```
+15. Now we see that is the last one that get output only
+```php
+array (size=2)
+  'alex' => 
+    array (size=3)
+      'id' => int 1
+      'username' => string 'alex' (length=4)
+      'email' => string 'alex@gmail.com' (length=14)
+  'billy' => 
+    array (size=3)
+      'id' => int 3
+      'username' => string 'billy' (length=5)
+      'email' => string 'billy@gmail.com' (length=15)
+```
+16. the array item with id 2 gets set then get replaced by the array item with id 3 that has same key name.
+17. Important to remember array keys are unique.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
