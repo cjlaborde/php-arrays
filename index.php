@@ -10,5 +10,6 @@
     <ul>
         <li><a href="/1-arrays-basics">Arrays Basics</a></li>
         <li><a href="/2-counting">Counting</a></li>
+        <li><a href="/3-looping">Looping</a></li>
 </body>
 </html>
