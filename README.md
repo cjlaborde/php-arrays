@@ -845,10 +845,101 @@ int 8
 2. Since we unset the values, we not get clean set of values.
 3. If you take variable by reference make sure to unset it after to avoid problem later when you try to use original array.
 
+### 4 The inarray function
+1. 
+```php
+$names = ['alex', 'billy', 'dale'];
+
+var_dump(in_array('alex', $names)); // true
+var_dump(in_array('ashley', $names)); // false
+```
+2. can be used in an if statement
+```php
+if (in_array()) {
+
+}
+```
+
+1. 
+```php
+$allowedFileExtensions = ['jpg', 'jpeg', 'png'];
+
+$fileName = 'cat.jpg';
 
 
+// explode function takes a string and create array using delimiter in this case is "."
+$fileParts = explode('.', $fileName);
 
+var_dump($fileParts);
 
+/*
+    array (size=2)
+    0 => string 'cat' (length=3)
+    1 => string 'jpg' (length=3)
+*/
+```
+2. get the .jpg
+```php
+$fileName = 'cat.jpg';
+$fileName = 'cat.jpg';
+
+// explode function takes a string and create array using delimiter in this case is "."
+$fileParts = explode('.', $fileName);
+
+// get last item from array in this case .jpg
+$fileExtension = end($fileParts);
+
+// var_dump($fileParts);
+var_dump($fileExtension);
+```
+3. Now we can use if statement to check if file is one of the required extensions
+```php
+
+if (in_array($fileExtension, $allowedFileExtensions)) {
+    die('Upload'); // Upload
+}
+
+```
+#### When looping we might want to excluse certain parts
+1. read files
+```php
+
+$files = opendir('files');
+
+while (($file = readdir($files)) !== false) {
+    var_dump($file);
+}
+
+/*
+ '..' (length=2)
+ 'two.txt' (length=7)
+ 'one.txt' (length=7)
+ '.' (length=1)
+ */
+ ```
+2. remove files that are not neccesary and you want to ignore
+3. In here we use array instead of a long multiple || statements
+```php
+$files = opendir('files');
+
+$ignoreFiles = ['.', '..', '.DS_Store'];
+
+while (($file = readdir($files)) !== false) {
+
+    // if ($file === '.' || $file === '..' || $file)
+    if (in_array($file, $ignoreFiles)) {
+        continue;
+    }
+    var_dump($file);  
+}
+/*
+ '..' (length=2)
+ 'two.txt' (length=7)
+ 'one.txt' (length=7)
+ '.' (length=1)
+*/
+```
+4. Another advantage is that I can just add new item to array and it will work
 
 
 
