@@ -941,11 +941,74 @@ while (($file = readdir($files)) !== false) {
 ```
 4. Another advantage is that I can just add new item to array and it will work
 
+### Arrays keys
+1. Allows us to extract keys from an array.
+```php
+$array = ['alex' => 26, 'billy' => 22];
 
+$keys = array_keys($array);
 
+var_dump($keys);
+/*
+array (size=2)
+  0 => string 'alex' (length=4)
+  1 => string 'billy' (length=5)
+*/
+```
+2. Here is the code we going to improve
+```php
+$db = new PDO('mysql:host=localhost;dbname=project', 'homestead', 'secret');
 
+$fields = [
+    'name'  => 'alex',
+    'email' => 'alex@codecourse.com'
+];
 
+$id = 1;
 
+$update = $db->prepare("UDATE users SET name = ?, email = ? WHERE id = ?");
+
+$update->execute([
+    'alex',
+    1
+]);
+```
+3. Here is how we improve it.
+```php
+$id = 1;
+
+$values = implode(' = ?, ', array_keys($fields)) . ' = ?';
+
+echo $values; // name = ?, email = ?
+```
+
+4. using array merge
+```php
+var_dump(array_merge($fields, [$id]));
+/*
+array (size=3)
+  'name' => string 'alex' (length=4)
+  'email' => string 'alex@codecourse.com' (length=19)
+  0 => int 1
+*/
+```
+
+5. using array values to get the values only 
+```php
+
+var_dump(array_merge(array_values($fields), [$id]));
+/*
+array (size=3)
+  0 => string 'alex' (length=4)
+  1 => string 'alex@codecourse.com' (length=19)
+  2 => int 1
+*/
+```
+6. Now we can use this code to get result we want
+```php
+$update = $db->prepare('UPDATE users SET {$values} WHERE id = ?');
+$update->execute(array_merge(array_values($fields), [$id]));
+```
 
 
 
