@@ -1326,3 +1326,165 @@ array (size=4)
 */
 ```
 2. You can pass multiple variables in use() to bring it to the current scope
+
+### Getting the sum of array items
+1. Now we will use array_sum which essentially add up any item you have within an array.
+```php
+$numbers = [2, 4, 6];
+
+echo array_sum($numbers); // 12
+
+```
+2. now if you have string value it will simply be ignored $numbers = [2, 4, 6, 'alex'];
+
+3. if we include number with string it will sum it
+```php
+$numbers = [2, 4, 6, '1alex'];
+
+echo array_sum($numbers); // 12
+
+```
+4. The reason it works is because it will convert the string to any number it finds in the start
+```php
+echo (int) '1alex'; // 1
+```
+5. It will not work if the number is at the end
+```php
+echo (int) 'alex1'; // 0
+```
+#### using func_get_args  inside add function
+1. Get all arguments passed in the function without declaring them in the function ($num1, $num2)
+```php
+function add()
+{
+    var_dump(func_get_args());
+}
+
+add(1, 2, 3);
+/*
+array (size=3)
+  0 => int 1
+  1 => int 2
+  2 => int 3
+*/
+
+```
+2. now we use array_sum
+```php
+function add()
+{
+    return array_sum(func_get_args());
+}
+
+echo add(1, 2, 3); // 6
+/*
+array (size=3)
+  0 => int 1
+  1 => int 2
+  2 => int 3
+*/
+```
+
+#### now we will use OOP
+```php
+class Item
+{
+    protected $cost;
+
+    public function setCost($cost)
+    {
+        $this->cost = $cost;
+
+        return $this;
+    }
+
+    public function getCost()
+    {
+        return $this->cost;
+    }
+}
+
+class Cart
+{
+}
+
+$item1 = (new Item)->setCost(10);
+$item2 = (new Item)->setCost(20);
+
+var_dump($item1);
+/*
+object(Item)[2]
+  protected 'cost' => int 10
+*/
+var_dump($item2);
+/*
+object(Item)[3]
+  protected 'cost' => int 20
+*/  
+```
+
+2. The idea is that within cart we want to take a list of items.
+3. We will have method called add() to add items to our cart
+```php
+class Cart
+{
+    protected $items = [];
+
+    public function add(Item $item)
+    {
+        $this->items[] = $item;
+
+        return $this;
+    }
+}
+```
+4. Now we will have function called total() inside cart with a temporally fixed value
+5. Now we will create the total() function using different ways.
+6. Using foreach
+```php
+    public function total()
+    {
+        $total = 0;
+
+        foreach ($this->items as $item) {
+            $total += $item->getCost();
+        }
+        return $total;
+    }
+```
+7. array_sum not going to work since we can't sum objects with it
+```php
+public function total()
+{
+  return array_sum($this->items);
+}
+
+```
+8. Now we can also use array_map to list the items
+```php
+    public function total()
+    {
+        $items = array_map(function ($item) {
+            return $item->getCost();
+        }, $this->items);
+
+        var_dump($items);
+        die();
+    }
+    /*
+      array (size=2)
+        0 => int 10
+        1 => int 20
+    */
+
+```
+9. Now we can get correct number by putting array_map inside array_sum
+```php
+    public function total()
+    {
+        return array_sum(array_map(function ($item) {
+            return $item->getCost();
+        }, $this->items));
+    }
+```
+10. with array_map it allows for more flexibility as well

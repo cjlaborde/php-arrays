@@ -16,6 +16,7 @@
         <li><a href="/4-the-inarray-function">The inarray function</a></li>
         <li><a href="/5-arrays-keys">Array Keys</a></li>
         <li><a href="/6-mapping-over-an-array">Mapping over an array</a></li>
+        <li><a href="/7-getting-the-sum-of-array-items">Getting the sum of array items</a></li>
 </body>
 
 </html>
