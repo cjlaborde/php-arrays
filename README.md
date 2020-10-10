@@ -1488,3 +1488,149 @@ public function total()
     }
 ```
 10. with array_map it allows for more flexibility as well
+
+### Filtering
+1. array filter is very similar to array_map in the syntax but what we actually doing is filtering out items we don't need rather than mapping through them and possibly changing item.
+2. Lets say we have group of users we need to filter.
+```php
+$users = [
+    ['username' => 'alex', 'score' => 0],
+    ['username' => 'ashley', 'score' => 0],
+    ['username' => 'dale', 'score' => 50],
+    ['username' => 'billy', 'score' => 12],
+];
+```
+3. In here It return empty since I am setting all items to return false
+```php
+$users = array_filter($users, function ($user) {
+    return false;
+});
+
+var_dump($users);
+/*
+array (size=0)
+  empty
+*/
+
+```
+4. If return true we get back all of our items
+```php
+$users = array_filter($users, function ($user) {
+    return true;
+});
+
+var_dump($users);
+/*
+array (size=4)
+  0 => 
+    array (size=2)
+      'username' => string 'alex' (length=4)
+      'score' => int 0
+  1 => 
+    array (size=2)
+      'username' => string 'ashley' (length=6)
+      'score' => int 0
+  2 => 
+    array (size=2)
+      'username' => string 'dale' (length=4)
+      'score' => int 50
+  3 => 
+    array (size=2)
+      'username' => string 'billy' (length=5)
+      'score' => int 12
+*/
+```
+5. array_filter is really when ever a condition return true or false
+6. In our case we want to filter out users that have score 0
+```php
+$users = array_filter($users, function ($user) {
+    if ($user['score'] > 0) {
+        return true;
+    }
+});
+
+var_dump($users)
+/*
+array (size=2)
+  2 => 
+    array (size=2)
+      'username' => string 'dale' (length=4)
+      'score' => int 50
+  3 => 
+    array (size=2)
+      'username' => string 'billy' (length=5)
+      'score' => int 12
+*/
+
+```
+7. since it will return true or false it will reach same result with less code
+```php
+$users = array_filter($users, function ($user) {
+    return $user['score'] > 0;
+});
+
+var_dump($users)
+/*
+array (size=2)
+  2 => 
+    array (size=2)
+      'username' => string 'dale' (length=4)
+      'score' => int 50
+  3 => 
+    array (size=2)
+      'username' => string 'billy' (length=5)
+      'score' => int 12
+*/
+
+```
+8. Now we will use keys instead to filter the user with index key 0
+9. This will not work because we have to tell array filter we want to use both the index and the value 
+```php
+$users = array_filter($users, function ($user, $index) {
+    return $index === 0;
+},);
+
+var_dump($users);
+//Uncaught ArgumentCountError: Too few arguments to function
+```
+10. ARRAY_FILTER_USE_BOTH
+```php
+$users = array_filter($users, function ($user, $index) {
+    return $index === 0;
+}, ARRAY_FILTER_USE_BOTH);
+
+var_dump($users);
+/*
+array (size=1)
+  0 => 
+    array (size=2)
+      'username' => string 'alex' (length=4)
+      'score' => int 0
+*/
+```
+11. simpler way is just use $users[0];
+
+1. Now we will filter out null and false values
+```php
+$scores = [
+    2,
+    5,
+    10,
+    false,
+    null,
+    0
+];
+
+$scores = array_filter($scores);
+var_dump($scores);
+/*
+array (size=3)
+  0 => int 2
+  1 => int 5
+  2 => int 10
+  6 => int -5
+*/
+
+```
+2. Now the problem is that it also remove value 0
+3. It would not remove negative values
