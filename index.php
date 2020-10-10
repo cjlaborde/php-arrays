@@ -15,6 +15,7 @@
         <li><a href="/3-looping">Looping</a></li>
         <li><a href="/4-the-inarray-function">The inarray function</a></li>
         <li><a href="/5-arrays-keys">Array Keys</a></li>
+        <li><a href="/6-mapping-over-an-array">Mapping over an array</a></li>
 </body>
 
 </html>

@@ -1010,5 +1010,319 @@ $update = $db->prepare('UPDATE users SET {$values} WHERE id = ?');
 $update->execute(array_merge(array_values($fields), [$id]));
 ```
 
+### Mapping over an array
+1. The array we will use.
+```php
+$people = [
+    [
+        'id' => 1,
+        'first_name' => 'Alex',
+        'last_name' => 'Garret',
+        'email' => 'alex@gmail.com',
+    ],
+    [
+        'id' => 2,
+        'first_name' => 'Billy',
+        'last_name' => 'Garret',
+        'email' => 'billy@gmail.com',
+    ],
+    [
+        'id' => 3,
+        'first_name' => 'Dale',
+        'last_name' => 'Garret',
+        'email' => 'dale@gmail.com',
+    ],
+    [
+        'id' => 4,
+        'first_name' => null,
+        'last_name' => null,
+        'email' => 'ashley@gmail.com',
+    ]
+];
+```
+2. when using foreach to loop over array
+```php
+foreach ($people as $person) {
+    $person['full_name'] = $person['first_name'] . ' ' . $person['last_name'];
+    unset($person);
+}
 
+var_dump($people);
 
+/*
+array (size=4)
+  0 => 
+    array (size=4)
+      'id' => int 1
+      'first_name' => string 'Alex' (length=4)
+      'last_name' => string 'Garret' (length=6)
+      'email' => string 'alex@gmail.com' (length=14)
+  1 => 
+    array (size=4)
+      'id' => int 2
+      'first_name' => string 'Billy' (length=5)
+      'last_name' => string 'Garret' (length=6)
+      'email' => string 'billy@gmail.com' (length=15)
+  2 => 
+    array (size=4)
+      'id' => int 3
+      'first_name' => string 'Dale' (length=4)
+      'last_name' => string 'Garret' (length=6)
+      'email' => string 'dale@gmail.com' (length=14)
+  3 => 
+    array (size=4)
+      'id' => int 4
+      'first_name' => null
+      'last_name' => null
+      'email' => string 'ashley@gmail.com' (length=16)
+*/
+```
+#### array_map
+1.  First argument is an anonymous function.
+2.  Second argument is the array we plan to loop through.
+```php
+$people = array_map(function ($person) {
+    var_dump($person);
+}, $people);
+/*
+/home/cjlaborde/Sites/phparrays/6-mapping-over-an-array/index.php:40:
+array (size=4)
+  'id' => int 1
+  'first_name' => string 'Alex' (length=4)
+  'last_name' => string 'Garret' (length=6)
+  'email' => string 'alex@gmail.com' (length=14)
+/home/cjlaborde/Sites/phparrays/6-mapping-over-an-array/index.php:40:
+array (size=4)
+  'id' => int 2
+  'first_name' => string 'Billy' (length=5)
+  'last_name' => string 'Garret' (length=6)
+  'email' => string 'billy@gmail.com' (length=15)
+/home/cjlaborde/Sites/phparrays/6-mapping-over-an-array/index.php:40:
+array (size=4)
+  'id' => int 3
+  'first_name' => string 'Dale' (length=4)
+  'last_name' => string 'Garret' (length=6)
+  'email' => string 'dale@gmail.com' (length=14)
+/home/cjlaborde/Sites/phparrays/6-mapping-over-an-array/index.php:40:
+array (size=4)
+  'id' => int 4
+  'first_name' => null
+  'last_name' => null
+  'email' => string 'ashley@gmail.com' (length=16)
+*/
+```
+3. Now if we do it like this we will get weird result.
+```php
+$people = array_map(function ($person) {
+    // var_dump($person);
+    $person['full_name'] = $person['first_name'] . ' ' . $person['last_name'];
+}, $people);
+
+var_dump($people);
+
+/*
+array (size=4)
+  0 => null
+  1 => null
+  2 => null
+  3 => null
+*/
+```
+4. The reason for this is once we modify these people we need to return that person
+```php
+$people = array_map(function ($person) {
+    // var_dump($person);
+    $person['full_name'] = $person['first_name'] . ' ' . $person['last_name'];
+    return $person;
+}, $people);
+
+var_dump($people);
+
+/*
+array (size=4)
+  0 => 
+    array (size=5)
+      'id' => int 1
+      'first_name' => string 'Alex' (length=4)
+      'last_name' => string 'Garret' (length=6)
+      'email' => string 'alex@gmail.com' (length=14)
+      'full_name' => string 'Alex Garret' (length=11)
+  1 => 
+    array (size=5)
+      'id' => int 2
+      'first_name' => string 'Billy' (length=5)
+      'last_name' => string 'Garret' (length=6)
+      'email' => string 'billy@gmail.com' (length=15)
+      'full_name' => string 'Billy Garret' (length=12)
+  2 => 
+    array (size=5)
+      'id' => int 3
+      'first_name' => string 'Dale' (length=4)
+      'last_name' => string 'Garret' (length=6)
+      'email' => string 'dale@gmail.com' (length=14)
+      'full_name' => string 'Dale Garret' (length=11)
+  3 => 
+    array (size=5)
+      'id' => int 4
+      'first_name' => null
+      'last_name' => null
+      'email' => string 'ashley@gmail.com' (length=16)
+      'full_name' => string ' ' (length=1)
+*/
+```
+5. Now we want to return full_name as null instead of ' '
+```php
+$people = array_map(function ($person) {
+    if (!$person['first_name'] && !$person['last_name']) {
+        $person['full_name'] = null;
+        return $person;
+    }
+
+    // var_dump($person);
+    $person['full_name'] = $person['first_name'] . ' ' . $person['last_name'];
+    return $person;
+}, $people);
+
+var_dump($people);
+
+/*
+array (size=4)
+  0 => 
+    array (size=5)
+      'id' => int 1
+      'first_name' => string 'Alex' (length=4)
+      'last_name' => string 'Garret' (length=6)
+      'email' => string 'alex@gmail.com' (length=14)
+      'full_name' => string 'Alex Garret' (length=11)
+  1 => 
+    array (size=5)
+      'id' => int 2
+      'first_name' => string 'Billy' (length=5)
+      'last_name' => string 'Garret' (length=6)
+      'email' => string 'billy@gmail.com' (length=15)
+      'full_name' => string 'Billy Garret' (length=12)
+  2 => 
+    array (size=5)
+      'id' => int 3
+      'first_name' => string 'Dale' (length=4)
+      'last_name' => string 'Garret' (length=6)
+      'email' => string 'dale@gmail.com' (length=14)
+      'full_name' => string 'Dale Garret' (length=11)
+  3 => 
+    array (size=5)
+      'id' => int 4
+      'first_name' => null
+      'last_name' => null
+      'email' => string 'ashley@gmail.com' (length=16)
+      'full_name' => null
+*/
+
+```
+6. Now what if we want to include an index
+```php
+$people = array_map(function ($person, $index) {
+    var_dump($index);
+}, $people);
+
+var_dump($people);
+
+/*
+array (size=4)
+  0 => null
+  1 => null
+  2 => null
+  3 => null
+  */
+```
+7. This will not work, so we going to do pass array_keys as index
+8. array_map you can pass more than 1 array after the initial array.
+```php
+$people = array_map(function ($person, $index) {
+    var_dump($index);
+}, $people);
+
+var_dump($people);
+
+/*
+int 0
+int 1
+int 2
+int 3
+  */
+```
+9. What if we want to pass another argument
+```php
+$people = array_map(function ($person, $index, $letter) {
+    // var_dump($index);
+    var_dump($letter);
+}, $people, array_keys($people), ['a', 'b', 'c', 'd']);
+
+/*
+string 'a' (length=1)
+string 'b' (length=1)
+string 'c' (length=1)
+string 'd' (length=1)
+*/
+```
+10. array_map usually a better option than using foreach and passing values by references.
+
+#### Now we will discuss scope
+1. In a foreach the scope is within itself
+2. Now in array_map when you introduce anonymous function or enclosure this has it's own scope
+3. We get error here for this reason. Since now the function has its own scope.
+```php
+$ages = [26, 22, 53, 51];
+
+$people = array_map(function ($person, $index) {
+    $person['age'] = $ages[$index];
+    return $person;
+}, $people, array_keys($people));
+
+var_dump($people);
+// Notice: Undefined variable: ages
+```
+4. To resolve this we use the use keyword to access $ages variable withing the array_map function
+#### use() with array_map
+1. In the use you pass variables you can to use within that scope.
+```php
+$ages = [26, 22, 53, 51];
+
+$people = array_map(function ($person, $index) use ($ages) {
+    $person['age'] = $ages[$index];
+    return $person;
+}, $people, array_keys($people));
+
+var_dump($people);
+/*
+array (size=4)
+  0 => 
+    array (size=5)
+      'id' => int 1
+      'first_name' => string 'Alex' (length=4)
+      'last_name' => string 'Garret' (length=6)
+      'email' => string 'alex@gmail.com' (length=14)
+      'age' => int 26
+  1 => 
+    array (size=5)
+      'id' => int 2
+      'first_name' => string 'Billy' (length=5)
+      'last_name' => string 'Garret' (length=6)
+      'email' => string 'billy@gmail.com' (length=15)
+      'age' => int 22
+  2 => 
+    array (size=5)
+      'id' => int 3
+      'first_name' => string 'Dale' (length=4)
+      'last_name' => string 'Garret' (length=6)
+      'email' => string 'dale@gmail.com' (length=14)
+      'age' => int 53
+  3 => 
+    array (size=5)
+      'id' => int 4
+      'first_name' => null
+      'last_name' => null
+      'email' => string 'ashley@gmail.com' (length=16)
+      'age' => int 51
+*/
+```
+2. You can pass multiple variables in use() to bring it to the current scope
