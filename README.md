@@ -1634,3 +1634,403 @@ array (size=3)
 ```
 2. Now the problem is that it also remove value 0
 3. It would not remove negative values
+
+# The arraywalk function
+1. We will compare this to array_map
+```php
+$people = [
+    [
+        'id' => 1,
+        'first_name' => 'Alex',
+        'last_name' => 'Garret',
+        'email' => 'alex@gmail.com',
+    ],
+    [
+        'id' => 2,
+        'first_name' => 'Billy',
+        'last_name' => 'Garret',
+        'email' => 'billy@gmail.com',
+    ],
+    [
+        'id' => 3,
+        'first_name' => 'Dale',
+        'last_name' => 'Garret',
+        'email' => 'dale@gmail.com',
+    ],
+    [
+        'id' => 4,
+        'first_name' => null,
+        'last_name' => null,
+        'email' => 'ashley@gmail.com',
+    ]
+];
+
+
+$people = array_map(function ($person) {
+    $person['first_name'] = 'Dale'; 
+    return $person;
+}, $people);
+
+
+var_dump($people);
+
+/*
+array (size=4)
+  0 => 
+    array (size=4)
+      'id' => int 1
+      'first_name' => string 'Dale' (length=4)
+      'last_name' => string 'Garret' (length=6)
+      'email' => string 'alex@gmail.com' (length=14)
+  1 => 
+    array (size=4)
+      'id' => int 2
+      'first_name' => string 'Dale' (length=4)
+      'last_name' => string 'Garret' (length=6)
+      'email' => string 'billy@gmail.com' (length=15)
+  2 => 
+    array (size=4)
+      'id' => int 3
+      'first_name' => string 'Dale' (length=4)
+      'last_name' => string 'Garret' (length=6)
+      'email' => string 'dale@gmail.com' (length=14)
+  3 => 
+    array (size=4)
+      'id' => int 4
+      'first_name' => string 'Dale' (length=4)
+      'last_name' => null
+      'email' => string 'ashley@gmail.com' (length=16)
+*/
+```
+2. The diference is that array walk give us more flexibility
+3. Array walk will return boolean
+4. first you pass  the array you want to loop through
+5. Then you pass the functiom
+6. $index is automatically available so no need to pass keys like array_map
+```php
+
+array_walk($people, function ($person, $index) {
+    $person['first_name'] = 'Dale';
+    return $person;
+});
+
+var_dump($people);
+
+/*
+array (size=4)
+  0 => 
+    array (size=4)
+      'id' => int 1
+      'first_name' => string 'Alex' (length=4)
+      'last_name' => string 'Garret' (length=6)
+      'email' => string 'alex@gmail.com' (length=14)
+  1 => 
+    array (size=4)
+      'id' => int 2
+      'first_name' => string 'Billy' (length=5)
+      'last_name' => string 'Garret' (length=6)
+      'email' => string 'billy@gmail.com' (length=15)
+  2 => 
+    array (size=4)
+      'id' => int 3
+      'first_name' => string 'Dale' (length=4)
+      'last_name' => string 'Garret' (length=6)
+      'email' => string 'dale@gmail.com' (length=14)
+  3 => 
+    array (size=4)
+      'id' => int 4
+      'first_name' => null
+      'last_name' => null
+      'email' => string 'ashley@gmail.com' (length=16)
+*/
+```
+7. This does not work because when we want to modify something we want to pass person by reference &$person.
+8. Using &$person makes $person reference the original
+9. Because unlike array_map we not creating new variable $people = array_map
+10. What we doing is modifying the existing array 
+```php
+array_walk($people, function (&$person, $index) {
+    $person['first_name'] = 'Dale';
+    return $person;
+});
+
+var_dump($people);
+
+*/
+array (size=4)
+  0 => 
+    array (size=4)
+      'id' => int 1
+      'first_name' => string 'Dale' (length=4)
+      'last_name' => string 'Garret' (length=6)
+      'email' => string 'alex@gmail.com' (length=14)
+  1 => 
+    array (size=4)
+      'id' => int 2
+      'first_name' => string 'Dale' (length=4)
+      'last_name' => string 'Garret' (length=6)
+      'email' => string 'billy@gmail.com' (length=15)
+  2 => 
+    array (size=4)
+      'id' => int 3
+      'first_name' => string 'Dale' (length=4)
+      'last_name' => string 'Garret' (length=6)
+      'email' => string 'dale@gmail.com' (length=14)
+  3 => 
+    array (size=4)
+      'id' => int 4
+      'first_name' => string 'Dale' (length=4)
+      'last_name' => null
+      'email' => string 'ashley@gmail.com' (length=16)
+*/
+```
+11. we can pass other arguments after the function
+```php
+array_walk($people, function (&$person, $index, $data) {
+    $person['first_name'] = $data['first_name'];
+    $person['first_name'] = $data['last_name'];
+    return $person;
+}, ['first_name' => 'Dale', 'last_name' => 'Smith']);
+
+var_dump($people);
+/*
+array (size=4)
+  0 => 
+    array (size=4)
+      'id' => int 1
+      'first_name' => string 'Smith' (length=5)
+      'last_name' => string 'Garret' (length=6)
+      'email' => string 'alex@gmail.com' (length=14)
+  1 => 
+    array (size=4)
+      'id' => int 2
+      'first_name' => string 'Smith' (length=5)
+      'last_name' => string 'Garret' (length=6)
+      'email' => string 'billy@gmail.com' (length=15)
+  2 => 
+    array (size=4)
+      'id' => int 3
+      'first_name' => string 'Smith' (length=5)
+      'last_name' => string 'Garret' (length=6)
+      'email' => string 'dale@gmail.com' (length=14)
+  3 => 
+    array (size=4)
+      'id' => int 4
+      'first_name' => string 'Smith' (length=5)
+      'last_name' => null
+      'email' => string 'ashley@gmail.com' (length=16)
+*/
+```
+#### Create joinName function
+1. $delimiter is what separe our names
+2. Here we will use array_walk to call a function
+```php
+function joinName(&$person, $index, $delimeter = ' ')
+{
+    $person['full_name'] = $person['first_name'] . $delimeter . $person['last_name'];
+    return $person;
+}
+
+array_walk($people, 'joinName');
+// pass the delimiter as second argument
+array_walk($people, 'joinName', '%20');
+
+var_dump($people);
+/*
+array (size=4)
+  0 => 
+    array (size=5)
+      'id' => int 1
+      'first_name' => string 'Alex' (length=4)
+      'last_name' => string 'Garret' (length=6)
+      'email' => string 'alex@gmail.com' (length=14)
+      'full_name' => string 'Alex Garret' (length=11)
+  1 => 
+    array (size=5)
+      'id' => int 2
+      'first_name' => string 'Billy' (length=5)
+      'last_name' => string 'Garret' (length=6)
+      'email' => string 'billy@gmail.com' (length=15)
+      'full_name' => string 'Billy Garret' (length=12)
+  2 => 
+    array (size=5)
+      'id' => int 3
+      'first_name' => string 'Dale' (length=4)
+      'last_name' => string 'Garret' (length=6)
+      'email' => string 'dale@gmail.com' (length=14)
+      'full_name' => string 'Dale Garret' (length=11)
+  3 => 
+    array (size=5)
+      'id' => int 4
+      'first_name' => null
+      'last_name' => null
+      'email' => string 'ashley@gmail.com' (length=16)
+      'full_name' => string ' ' (length=1)
+*/
+```
+
+#### array_walk_recursive
+1. It will look inside and array then within that array and within another array inside
+
+```php
+
+$payload = [
+    [
+        'id' => '1.5',
+        'body' => 'What a lovely day',
+        'user' => [
+            'id' => '123'
+        ]
+    ],
+    [
+        'id' => '2',
+        'body' => 'What a lovely day',
+        'user' => [
+            'id' => '456'
+        ]
+    ],
+];
+
+var_dump($payload);
+/*
+array (size=2)
+  0 => 
+    array (size=3)
+      'id' => string '1.5' (length=3)
+      'body' => string 'What a lovely day' (length=17)
+      'user' => 
+        array (size=1)
+          'id' => string '123' (length=3)
+  1 => 
+    array (size=3)
+      'id' => string '2' (length=1)
+      'body' => string 'What a lovely day' (length=17)
+      'user' => 
+        array (size=1)
+          'id' => string '456' (length=3)
+*/
+
+```
+2. The problem is we want integers instead of strings id so we need to do this recursively through the entire payload.
+```php
+array_walk_recursive($payload, function (&$value) {
+    var_dump($value);
+});
+
+/*
+ '1.5' (length=3)
+ 'What a lovely day' (length=17)
+ '123' (length=3)
+ '2' (length=1)
+ 'What a lovely day' (length=17)
+ '456' (length=3)
+
+*/
+
+```
+3. Now that we have each value we can check if each value is numeric
+4. We will check if value is_numeric and change it to integer
+```php
+array_walk_recursive($payload, function (&$value) {
+    if (is_numeric($value)) {
+        $value = (int) $value;
+    }
+});
+
+var_dump($payload);
+
+/*
+array (size=2)
+  0 => 
+    array (size=3)
+      'id' => int 1
+      'body' => string 'What a lovely day' (length=17)
+      'user' => 
+        array (size=1)
+          'id' => int 123
+  1 => 
+    array (size=3)
+      'id' => int 2
+      'body' => string 'What a lovely day' (length=17)
+      'user' => 
+        array (size=1)
+          'id' => int 456
+
+ */
+```
+5. Shorter way without if statement using ternary operator
+```php
+array_walk_recursive($payload, function (&$value) {
+    $value = is_numeric($value) ? (int) $value : $value;
+});
+
+```
+6. Now what if we want to check if number is float or integer
+7. So we convert them all to float then check if they have decimal place or not
+8. To do this we use if statement with floor that round down the value
+9. Then we check if that is equal to the original value
+10. For example if we floor 1.5 we get 1 so floating values will not pass the if statement
+11. While 123 after floor is still 123 hence is an integer.
+
+```php
+
+function castNumericValues(&$value)
+{
+    if (is_numeric($value)) {
+        $value = (float) $value;
+
+        if (floor($value) === $value) {
+            $value = (int) $value;
+        }
+    }
+}
+
+array_walk_recursive($payload, 'castNumericValues');
+
+
+
+var_dump($payload);
+/*
+array (size=2)
+  0 => 
+    array (size=3)
+      'id' => float 1.5
+      'body' => string 'What a lovely day' (length=17)
+      'user' => 
+        array (size=1)
+          'id' => int 123
+  1 => 
+    array (size=3)
+      'id' => int 2
+      'body' => string 'What a lovely day' (length=17)
+      'user' => 
+        array (size=1)
+          'id' => int 456
+*/
+```
+12. It works correctly but we can write the code in a more cleaner way.
+```php
+function castNumericValues(&$value)
+{
+    // if (is_numeric($value)) {
+    //     $value = (float) $value;
+
+    //     if (floor($value) === $value) {
+    //         $value = (int) $value;
+    //     }
+    // }
+    if (!is_numeric($value)) {
+        return;
+    }
+    $value = (float) $value;
+
+    if (floor($value) === $value) {
+        $value = (int) $value;
+    }
+}
+```
+13. Between array_walk and array_map you might decide which to use.
+14. Just remember we need to pass value by reference &$value.
+15. We also have added benefict to have $index without having to pass it in.
+16. As well remember that we are modifying the original array.
+17. So if you don't want to overwrite is better to use array_map instead.
