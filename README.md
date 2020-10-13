@@ -6839,3 +6839,63 @@ array (size=4)
   3 => int 2
 */
 ```
+
+### Pushing and popping
+#### Pushing
+1. Add Item to array
+```php
+$names = ['alex', 'billy'];
+
+$names[] = 'dale';
+
+var_dump($names)
+/*
+array (size=3)
+  0 => string 'alex' (length=4)
+  1 => string 'billy' (length=5)
+  2 => string 'dale' (length=4)
+*/
+```
+2. Now we will use array_push that can add 1 or more items
+```php
+array_push($names, 'dale');
+
+var_dump($names);
+/*
+array (size=3)
+  0 => string 'alex' (length=4)
+  1 => string 'billy' (length=5)
+  2 => string 'dale' (length=4)
+*/
+```
+3. Reason you want to use array_push is that is very convenient to pass multiple values.
+```php
+array_push($names, 'dale', 'tabby', 'sheba');
+/*
+array (size=5)
+  0 => string 'alex' (length=4)
+  1 => string 'billy' (length=5)
+  2 => string 'dale' (length=4)
+  3 => string 'tabby' (length=5)
+  4 => string 'sheba' (length=5)
+*/
+```
+#### Remove last element from the array
+1. lets remove last item from the array
+```php
+array_pop($names);
+var_dump($names);
+
+/*
+array (size=1)
+  0 => string 'alex' (length=4)
+*/
+
+``` 
+2. To return only the value that been pop
+```php
+$popped = array_pop($names);
+
+var_dump($popped);
+// string 'billy' (length=5)
+```

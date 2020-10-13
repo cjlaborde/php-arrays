@@ -20,6 +20,7 @@
         <li><a href="/8-filtering">Filtering</a></li>
         <li><a href="/9-thetarraywalk-function">The arraywalk function</a></li>
         <li><a href="/10-sorting">Sorting</a></li>
+        <li><a href="/11-Pushing-and-popping">Pushing and popping</a></li>
 </body>
 
 </html>
