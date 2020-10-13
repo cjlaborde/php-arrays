@@ -19,6 +19,7 @@
         <li><a href="/7-getting-the-sum-of-array-items">Getting the sum of array items</a></li>
         <li><a href="/8-filtering">Filtering</a></li>
         <li><a href="/9-thetarraywalk-function">The arraywalk function</a></li>
+        <li><a href="/10-sorting">Sorting</a></li>
 </body>
 
 </html>
