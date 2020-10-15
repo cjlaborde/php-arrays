@@ -6831,7 +6831,7 @@ var_dump($numbers);
   1 => string 'alex' (length=4)
   2 => string 'ashley' (length=6)
   3 => string 'dale' (length=4)
-
+ 
 array (size=4)
   0 => int 3
   1 => int 1
@@ -6899,3 +6899,125 @@ $popped = array_pop($names);
 var_dump($popped);
 // string 'billy' (length=5)
 ```
+
+### The array_reduce function
+1. The purpose of array_reduce is literally take an array and reduce it to a single value.
+
+2. First we pass what we want to reduce $items and then the callback function ()
+3. <https://www.php.net/manual/en/function.array-reduce.php>
+```
+Parameters ¶
+array
+The input array.
+
+callback
+callback ( mixed $carry , mixed $item ) : mixed
+carry
+Holds the return value of the previous iteration; in the case of the first iteration it instead holds the value of initial.
+
+item
+Holds the value of the current iteration.
+
+initial
+If the optional initial is available, it will be used at the beginning of the process, or as a final result in case the array is empty.
+```
+4. With carry the first loop will be initial then the other array items
+5. The first iteration is null based on $carry that we set it up as aditional item.
+```php
+$items = [
+    [
+        'price' => 5,
+    ],
+    [
+        'price' => 5,
+    ],
+    [
+        'price' => 5,
+    ],
+];
+```
+6. Lets var_dump $carry
+```php
+$total = array_reduce($items, function ($carry, $item) {
+  var_dump($carry);
+}, null);
+/*
+null
+null
+null
+*/
+
+```
+7. return $item;
+```php
+$total = array_reduce($items, function ($carry, $item) {
+  var_dump($carry);
+  return $item;
+}, null);
+/*
+null
+array (size=1)
+  'price' => int 5
+/home/cjlaborde/Sites/phparrays/12-the-array-reduce-function/index.php:17:
+array (size=1)
+  'price' => int 5
+*/
+```
+8. Lets var_dump items
+```php
+$total = array_reduce($items, function ($carry, $item) {
+    var_dump($carry);
+    return $item;
+}, null);
+/*
+array (size=1)
+  'price' => int 5
+/home/cjlaborde/Sites/phparrays/12-the-array-reduce-function/index.php:24:
+array (size=1)
+  'price' => int 5
+/home/cjlaborde/Sites/phparrays/12-the-array-reduce-function/index.php:24:
+array (size=1)
+  'price' => int 5
+*/
+```
+9. First check if $carry is null. if so return next item.
+```php
+$total = array_reduce($items, function ($carry, $item) {
+    if (!$carry) {
+      return $item;
+    }
+
+}, null);
+```
+10. Then we going reduce the $items array to a single price
+11. Then we use $carry which will return the value of the previous iteration
+```php
+$total = array_reduce($items, function ($carry, $item) {
+    if (!$carry) {
+        return $item;
+    }
+
+    $carry['price'] += $item['price'];
+
+    return $carry;
+}, null);
+
+var_dump($total);
+/*
+array (size=1)
+  'price' => int 15
+*/
+var_dump($total['price']) // 15
+```
+
+
+
+
+
+
+
+
+
+
+
+
