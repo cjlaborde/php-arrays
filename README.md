@@ -7009,6 +7009,72 @@ array (size=1)
 */
 var_dump($total['price']) // 15
 ```
+### Random array items
+1. Select random item from an array
+2. Can be used for example to output random quote or color.
+3. Important to know that this is not a substitution for randomly selecting numbers
+4. You are better off using PHP functions for numbers like random_in(min, max);
+5. This is useful for selection a random item from an array.
+6. First we will use an example about colors.
+7. Having items from an array and picking random numbers.
+8. We going to have random selected color to change background color.
+9. We going to use the php random function
+```php
+echo rand(1, 5); 
+```
+10. Now what we can do is use random function to select random item from the array
+```php
+$colors = ['#ff7473', '#ffc952', '#47b8e0', '#34314c'];
+
+$backgroundColor = $colors[rand(0, 3)];
+
+echo $backgroundColor;
+```
+11. But what if you want to keep adding more colors and want to make it more dynamic
+12. What we do is use count and substract 1 since arrays first item start at 0.
+```php
+$backgroundColor = $colors[rand(0, count($colors) - 1)];
+```
+#### using array rand
+1. first we pass the item we going to randomly pick item from in this case $colors.
+2. second we select how many we want randomly selected in this case we only want 1.
+3. Here we use array_rand and see is picking up the key randomly.
+```php
+$backgroundColorKey = array_rand($colors, 1);
+
+var_dump($backgroundColorKey);
+```
+4. Now we will use backgroundColorKey to randomly select color
+```php
+$backgroundColorKey = array_rand($colors, 1);
+
+$backgroundColor = $colors[$backgroundColorKey];
+
+// var_dump($backgroundColorKey);
+var_dump($backgroundColor);
+```
+5. We can also refractor the code
+```php
+$backgroundColor = $colors[array_rand($colors, 1)];
+var_dump($backgroundColor);
+```
+6. Now we going to change the background color in html
+```html
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            background-color: <?php echo $backgroundColor; ?>;
+        }
+    </style>
+</head>
+```
 
 
 
