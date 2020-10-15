@@ -7128,9 +7128,55 @@ array (size=3)
 4. While 'likes' did merge up together perfectly even through they are within a multidimensional array
 5. Now you see the benefit of array_merge_recursive where recursive going through and merging any arrays under same index.
 
+### Imploding and exploding
+1. Early we looking into using implode function to take an array and create a string from it using a delimeter
+2. Now we will use implode and explode to see what it does.
+3. rather than using a foreach
+```php
+$names = ['alex', 'billy', 'ashley'];
 
+foreach ($names as $name) {
+    echo $name, ','; // alex, billy, ashley,
+}
+```
+4. As you see it look strange since it has comma at the end.
+5. There is a way to fix this, but can be made a lot simpler
+```php
+$users = '';
 
+foreach ($names as $index => $name) {
+    $users .= $name;
 
+    if ($index !== count($names) - 1) {
+        $users .= ', ';
+    }
+}
+echo $users; // alex, billy, ashley
+```
+6. using implode first we assign what we want to delimit by.
+```php
+echo implode(', ', $names); // alex, billy, ashley
+```
+7. we got same result with a single line of code.
+
+#### explode
+1. You are essentially taking a string and converting it into an array.
+2. we could have a list of names that is stored on a weird format
+3. Then you add ',' as the delimeter and pass the array
+```php
+$names = 'alex,billy,dale';
+
+$names = explode(',', $names);
+
+var_dump($names);
+/*
+array (size=3)
+  0 => string 'alex' (length=4)
+  1 => string 'billy' (length=5)
+  2 => string 'dale' (length=4)
+*/
+```
+4. You can combine both implode and explode
 
 
 

@@ -24,6 +24,7 @@
         <li><a href="/12-the-array-reduce-function">The array reduce function</a></li>
         <li><a href="/13-random-array-items">Random array items</a></li>
         <li><a href="/14-merging">Merging</a></li>
+        <li><a href="/15-imploding-and-exploding">Imploding and exploding</a></li>
 </body>
 
 </html>
