@@ -7077,6 +7077,67 @@ var_dump($backgroundColor);
 ```
 
 
+### Merging
+1. There are times you may want to merge 2 arrays.
+2. You can add multiple arrays to merge them together with array_merge
+```php
+$names = ['alex'];
+
+$moreNames = ['dale', 'ashley'];
+
+$cats = ['tabby', 'sheba'];
+
+
+$finalNames = array_merge($names, $moreNames, $cats);
+
+var_dump($finalNames);
+```
+
+#### merge arrays recursively
+1. What we want to do here is merge these arrays together
+```php
+$originalState = [
+    'username' => 'alex',
+    'likes' => ['food', 'cats']
+];
+
+$alteredState = [
+    'username' => 'alex',
+    'email' => 'alex@codecourse',
+    'likes' => ['codecourse']
+];
+
+$user = array_merge_recursive($originalState, $alteredState);
+var_dump($user);
+/*
+array (size=3)
+  'username' => 
+    array (size=2)
+      0 => string 'alex' (length=4)
+      1 => string 'alex' (length=4)
+  'likes' => 
+    array (size=3)
+      0 => string 'food' (length=4)
+      1 => string 'cats' (length=4)
+      2 => string 'codecourse' (length=10)
+  'email' => string 'alex@codecourse' (length=15)
+*/
+```
+2. Problem is the duplication with username
+3. So you need to check if value are same then omit the repetition
+4. While 'likes' did merge up together perfectly even through they are within a multidimensional array
+5. Now you see the benefit of array_merge_recursive where recursive going through and merging any arrays under same index.
+
+
+
+
+
+
+
+
+
+
+
 
 
 
